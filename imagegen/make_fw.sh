@@ -20,6 +20,16 @@ export PATH=$(brew --prefix coreutils)/libexec/gnubin:$PATH
 
 make_firmware() { # <rev>
     local rev="$1"
+    # copy additional root files
+    if [ -d $rev/files ]; then
+        rm -rfv $rev/files
+    fi
+    mkdir -pv $rev/files
+
+    for i in $(ls $CURPATH/$FILES); do
+        cp -fpRv $CURPATH/$FILES/$i $rev/files/ ;
+    done
+
     cd $rev && {
         make clean
         make image PROFILE=TLWR841 PACKAGES="$PACKAGES" FILES=files
@@ -56,43 +66,12 @@ cd $FILES && {
     chmod +x etc/init.d/*
 }
 
-cd $CURPATH
-# copy additional root files
-if [ -d $REV/files ]; then
-    rm -rf $REV/files
-fi
-mkdir -p $REV/files
-
-#if [ -d $TRUNK_REV/files ]; then
-#    rm -rf $TRUNK_REV/files
-#fi
-#mkdir -p $TRUNK_REV/files
-
-for i in $(ls $FILES); do
-    cp -fpR $FILES/$i $REV/files/ ;
-#    cp -fpR $FILES/$i $BB_REV/files/ ;
-#    cp -fpR $FILES/$i $TRUNK_REV/files/ ;
-done
-
-#cd $CURPATH/$REV && {
-#    if [ ! -e packages/n2n-v2_6603-1_ar71xx.ipk ]; then
-#        rm -f packages/Packages*
-#        wget -qO packages/n2n-v2_6603-1_ar71xx.ipk http://ecco.selfip.net/attitude_adjustment/ar71xx/packages/n2n-v2_6603-1_ar71xx.ipk
-#    fi
-#}
-
 make_firmware $CURPATH/$REV
-#make_firmware $CURPATH/$BB_REV
-#make_firmware $CURPATH/$TRUNK_REV
 
 # show firmware
 cd $CURPATH
 ls $REV/bin/ar71xx/*.bin
-#ls $BB_REV/bin/ar71xx/*.bin
-#ls $TRUNK_REV/bin/ar71xx/*.bin
 
 # upload firmware
 upload_firmware $REV
-#upload_firmware $BB_REV
-#upload_firmware $TRUNK_REV
 
