@@ -55,7 +55,10 @@ upload_firmware() { # <rev>
     local remote_dir="$target_path/$fw_dir"
 
     NCFS_HOME="$ncfshome" $ncfscmd_mkdir $remote_dir
-    for i in $(ls $rev/bin/ar71xx/*.bin); do
+    for i in $(ls $rev/bin/ar71xx/*-factory.bin); do
+        NCFS_HOME="$ncfshome" $ncfscmd_put $i $remote_dir
+    done
+    for i in $(ls $rev/bin/ar71xx/*-sysupgrade.bin); do
         NCFS_HOME="$ncfshome" $ncfscmd_put $i $remote_dir
     done
 }
