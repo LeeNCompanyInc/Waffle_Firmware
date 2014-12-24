@@ -17,8 +17,8 @@ FILES=${FILES:-"files"}
 TARGET=${TARGET:-"ar71xx"}
 target_path="$HOME/Dropbox/firmware"
 ncfscmd="CLI/ncfscmd.sh"
-ncfscmd_mkdir="mkdir -p"
-ncfscmd_put="cp"
+ncfscmd_mkdir="mkdir -pv"
+ncfscmd_put="cp -fpv"
 ncfshome="CLI/lib"
 export PATH=$(brew --prefix coreutils)/libexec/gnubin:$PATH
 
