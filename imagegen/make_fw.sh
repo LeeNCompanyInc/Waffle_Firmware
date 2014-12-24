@@ -5,6 +5,10 @@ CURPATH=$(pwd)
 REV=${REV:-"latest"}
 #BB_REV=${BB_REV:-"bb_stable"}
 #TRUNK_REV=${TRUNK_REV:-"trunk"}
+PROFILE=${PROFILE:-""}
+PROFILE="$PROFILE TLWR841"
+PROFILE_8M=${PROFILE_8M:-""}
+PROFILE_8M="$PROFILE_8M TLWR842 TLWDR4300 OM2P"
 PACKAGES=${PACKAGES:-""}
 PACKAGES="$PACKAGES luci luci-app-qos luci-app-p2pblock n2n-v2 coova-chilli"
 PACKAGES_8M=${PACKAGES_8M:-""}
@@ -32,10 +36,12 @@ make_firmware() { # <rev>
 
     cd $rev && {
         make clean
-        make image PROFILE=TLWR841 PACKAGES="$PACKAGES" FILES=files
-        make image PROFILE=TLWR842 PACKAGES="$PACKAGES_8M" FILES=files
-        make image PROFILE=TLWDR4300 PACKAGES="$PACKAGES_8M" FILES=files
-        make image PROFILE=OM2P PACKAGES="$PACKAGES_8M" FILES=files
+        for i in $PROFILE; do
+            make image PROFILE=$i PACKAGES="$PACKAGES" FILES=files
+        done
+        for i in $PROFILE_8M; do
+            make image PROFILE=$i PACKAGES="$PACKAGES_8M" FILES=files
+        done
     }
 }
 
