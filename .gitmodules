@@ -1,9 +1,9 @@
 [submodule "attitude_adjustment"]
 	path = attitude_adjustment
-	url = git://git.openwrt.org/12.09/openwrt.git
+url=https://github.com/teslamint/attitude_adjustment
 [submodule "trunk"]
 	path = trunk
-	url = git://git.openwrt.org/openwrt.git
+url=https://github.com/teslamint/openwrt
 [submodule "barrier_breaker"]
 	path = barrier_breaker
 	url = https://github.com/teslamint/barrier_breaker
