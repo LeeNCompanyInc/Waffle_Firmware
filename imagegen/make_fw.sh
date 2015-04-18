@@ -7,15 +7,27 @@ REV=${REV:-"latest"}
 #TRUNK_REV=${TRUNK_REV:-"trunk"}
 TARGET=${TARGET:-"ar71xx"}
 PROFILE=${PROFILE:-""}
-PROFILE="$PROFILE TLWR841"
 PROFILE_8M=${PROFILE_8M:-""}
-PROFILE_8M="$PROFILE_8M TLWR842 TLWDR4300 OM2P"
+PROFILE_16M=${PROFILE_16M:-""}
+case "$TARGET" in
+  ar71xx)
+  PROFILE="$PROFILE TLWR841"
+  PROFILE_8M="$PROFILE_8M TLWR842 TLWDR4300"
+  PROFILE_16M="$PROFILE_16M"
+  ;;
+  ralink|\
+  ramips)
+  PROFILE_16M="$PROFILE_16M MT7620a"
+  ;;
+esac
 PACKAGES=${PACKAGES:-""}
 PACKAGES="$PACKAGES luci luci-app-qos luci-app-p2pblock n2n-v2 coova-chilli kmod-ipt-coova"
 PACKAGES_8M=${PACKAGES_8M:-""}
 PACKAGES_8M="$PACKAGES $PACKAGES_8M curl"
 FILES=${FILES:-"files"}
 target_path="$HOME/Dropbox/firmware"
+PACKAGES_16M=${PACKAGES_16M:-""}
+PACKAGES_16M="$PACKAGES $PACKAGES_8M $PACKAGES_16M -wpad-mini wpad"
 ncfscmd="CLI/ncfscmd.sh"
 ncfscmd_mkdir="mkdir -pv"
 ncfscmd_put="cp -fpv"
@@ -41,6 +53,9 @@ make_firmware() { # <rev>
         done
         for i in $PROFILE_8M; do
             make image PROFILE=$i PACKAGES="$PACKAGES_8M" FILES=files
+        done
+        for i in $PROFILE_16M; do
+            make image PROFILE=$i PACKAGES="$PACKAGES_16M" FILES=files
         done
     }
 }
