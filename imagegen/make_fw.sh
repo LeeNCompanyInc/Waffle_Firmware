@@ -5,6 +5,7 @@ CURPATH=$(pwd)
 REV=${REV:-"latest"}
 #BB_REV=${BB_REV:-"bb_stable"}
 #TRUNK_REV=${TRUNK_REV:-"trunk"}
+TARGET=${TARGET:-"ar71xx"}
 PROFILE=${PROFILE:-""}
 PROFILE="$PROFILE TLWR841"
 PROFILE_8M=${PROFILE_8M:-""}
@@ -14,7 +15,6 @@ PACKAGES="$PACKAGES luci luci-app-qos luci-app-p2pblock n2n-v2 coova-chilli kmod
 PACKAGES_8M=${PACKAGES_8M:-""}
 PACKAGES_8M="$PACKAGES $PACKAGES_8M curl"
 FILES=${FILES:-"files"}
-TARGET=${TARGET:-"ar71xx"}
 target_path="$HOME/Dropbox/firmware"
 ncfscmd="CLI/ncfscmd.sh"
 ncfscmd_mkdir="mkdir -pv"
@@ -55,10 +55,10 @@ upload_firmware() { # <rev>
     local remote_dir="$target_path/$fw_dir"
 
     NCFS_HOME="$ncfshome" $ncfscmd_mkdir $remote_dir
-    for i in $(ls $rev/bin/ar71xx/*-factory.bin); do
+    for i in $(ls $rev/bin/$TARGET/*-factory.bin); do
         NCFS_HOME="$ncfshome" $ncfscmd_put $i $remote_dir
     done
-    for i in $(ls $rev/bin/ar71xx/*-sysupgrade.bin); do
+    for i in $(ls $rev/bin/$TARGET/*-sysupgrade.bin); do
         NCFS_HOME="$ncfshome" $ncfscmd_put $i $remote_dir
     done
 }
@@ -79,7 +79,7 @@ make_firmware $CURPATH/$REV
 
 # show firmware
 cd $CURPATH
-ls $REV/bin/ar71xx/*.bin
+ls $REV/bin/$TARGET/*.bin
 
 # upload firmware
 upload_firmware $REV
