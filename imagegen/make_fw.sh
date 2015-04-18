@@ -21,7 +21,7 @@ case "$TARGET" in
   ;;
 esac
 PACKAGES=${PACKAGES:-""}
-PACKAGES="$PACKAGES luci luci-app-qos luci-app-p2pblock n2n-v2 coova-chilli kmod-ipt-coova"
+PACKAGES="$PACKAGES luci luci-app-qos luci-app-p2pblock n2n-v2 coova-chilli"
 PACKAGES_8M=${PACKAGES_8M:-""}
 PACKAGES_8M="$PACKAGES $PACKAGES_8M curl"
 FILES=${FILES:-"files"}
