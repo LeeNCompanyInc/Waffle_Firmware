@@ -3,6 +3,7 @@
 
 CURPATH=$(pwd)
 REV=${REV:-"latest"}
+REV=$(basename $(readlink -f $REV))
 #BB_REV=${BB_REV:-"bb_stable"}
 #TRUNK_REV=${TRUNK_REV:-"trunk"}
 TARGET=${TARGET:-"ar71xx"}
