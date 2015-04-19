@@ -33,7 +33,10 @@ ncfscmd="CLI/ncfscmd.sh"
 ncfscmd_mkdir="mkdir -pv"
 ncfscmd_put="cp -fpv"
 ncfshome="CLI/lib"
-export PATH=$(brew --prefix coreutils)/libexec/gnubin:$PATH
+if [ -n "$(brew --prefix coreutils)" ]
+then
+  export PATH=$(brew --prefix coreutils)/libexec/gnubin:$PATH
+fi
 
 make_firmware() { # <rev>
     local rev="$1"
