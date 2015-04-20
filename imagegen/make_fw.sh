@@ -86,6 +86,7 @@ cd $FILES && {
     [ -e .git ] && {
         git stash
         git checkout -f
+        git fetch --all --tags
         git pull -f
         git stash pop
     }
