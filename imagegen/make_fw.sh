@@ -6,6 +6,7 @@ REV=${REV:-"latest"}
 REV=$(basename $(readlink -f $REV))
 #BB_REV=${BB_REV:-"bb_stable"}
 #TRUNK_REV=${TRUNK_REV:-"trunk"}
+BRAND=${BRAND:-"waffle"}
 TARGET=${TARGET:-"ar71xx"}
 PROFILE=${PROFILE:-""}
 PROFILE_8M=${PROFILE_8M:-""}
