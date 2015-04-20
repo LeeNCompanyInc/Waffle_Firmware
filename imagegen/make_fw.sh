@@ -66,7 +66,7 @@ make_firmware() { # <rev>
 
 upload_firmware() { # <rev>
     local rev="$1"
-    local version="$(cd $FILES && git describe)"
+    local version="$(cd $FILES && git describe --always --tags --dirty=m)"
     local branch="$(cd $FILES && git branch)"
     branch="${branch##* }"
     local dirname="${FILES##files_}"
