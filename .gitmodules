@@ -7,3 +7,6 @@ url=https://github.com/teslamint/openwrt
 [submodule "barrier_breaker"]
 	path = barrier_breaker
 	url = https://github.com/teslamint/barrier_breaker
+[submodule "chaos_calmer"]
+	path = chaos_calmer
+	url = git://git.openwrt.org/15.05/openwrt.git
