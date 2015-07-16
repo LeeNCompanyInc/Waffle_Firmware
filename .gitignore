@@ -16,5 +16,5 @@
 *.exe
 *.out
 *.app
-imagegen/!*.sh
 imagegen/*
+!imagegen/*.sh
