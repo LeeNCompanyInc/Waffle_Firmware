@@ -1,12 +1,12 @@
 [submodule "attitude_adjustment"]
 	path = attitude_adjustment
-url=https://github.com/teslamint/attitude_adjustment
+url=https://github.com/LeeNCompanyInc/openwrt
 [submodule "trunk"]
 	path = trunk
-url=https://github.com/teslamint/openwrt
+url=https://github.com/LeeNCompanyInc/openwrt
 [submodule "barrier_breaker"]
 	path = barrier_breaker
-	url = https://github.com/teslamint/barrier_breaker
+url=https://github.com/LeeNCompanyInc/openwrt
 [submodule "chaos_calmer"]
 	path = chaos_calmer
-	url = git://git.openwrt.org/15.05/openwrt.git
+url=https://github.com/LeeNCompanyInc/openwrt
