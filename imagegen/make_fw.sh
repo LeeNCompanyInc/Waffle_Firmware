@@ -4,6 +4,10 @@
 CURPATH=$(pwd)
 REV=${REV:-"latest"}
 REV=$(basename $(readlink -f $REV))
+if [ -z "$REV" ]; then
+	echo "failed to find image builder directory."
+	exit 1
+fi
 #BB_REV=${BB_REV:-"bb_stable"}
 #TRUNK_REV=${TRUNK_REV:-"trunk"}
 BRAND=${BRAND:-"waffle"}
