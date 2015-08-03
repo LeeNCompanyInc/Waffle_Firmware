@@ -24,7 +24,7 @@ case "$TARGET" in
   ;;
   ralink|\
   ramips)
-  PROFILE_16M="$PROFILE_16M MT7620a"
+  PROFILE_16M="$PROFILE_16M ZBT-WE826 XIAOMI-MIWIFI-MINI"
   ;;
 esac
 PACKAGES=${PACKAGES:-""}
