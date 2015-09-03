@@ -12,6 +12,7 @@ fi
 #TRUNK_REV=${TRUNK_REV:-"trunk"}
 BRAND=${BRAND:-"waffle"}
 TARGET=${TARGET:-"ar71xx"}
+SUBTARGET=${SUBTARGET:-"generic"}
 FILES=${FILES:-"files"}
 PROFILE=${PROFILE:-""}
 PROFILE_8M=${PROFILE_8M:-""}
@@ -36,7 +37,7 @@ PACKAGES_8M=${PACKAGES_8M:-""}
 PACKAGES_8M="$PACKAGES $PACKAGES_8M curl"
 PACKAGES_16M=${PACKAGES_16M:-""}
 PACKAGES_16M="$PACKAGES $PACKAGES_8M $PACKAGES_16M"
-target_path=${TARGET_PATH:-"$HOME/Dropbox/firmware"}
+TARGET_PATH=${TARGET_PATH:-"$HOME/Dropbox/firmware"}
 ncfscmd="CLI/ncfscmd.sh"
 ncfscmd_mkdir="mkdir -pv"
 ncfscmd_put="cp -fpv"
@@ -72,31 +73,31 @@ make_firmware() { # <rev>
     }
 }
 
-upload_firmware() { # <rev>
+upload_firmware() { # <rev> <files> <target> [subtarget=generic] [brand=Waffle]
     local rev="$1"
-    local version="$(cd $FILES && git describe --always --tags --dirty=m)"
-    local branch="$(cd $FILES && git branch)"
+	local files="$2"
+	local target="$3"
+	local subtarget="$4"
+	subtarget=${subtarget:-"generic"}
+	local brand="$5"
+	brand=${brand:-"Waffle"}
+    local version="$(cd $files && git describe --always --tags --dirty=m)"
+    local branch="$(cd $files && git branch)"
     branch="${branch##* }"
-    local dirname="${FILES##files_}"
+    local dirname="${files##files_}"
     local fw_dir="$rev-$dirname-$version"
-    local remote_dir="$target_path/$fw_dir"
+    local remote_dir="$TARGET_PATH/$fw_dir"
 
     NCFS_HOME="$ncfshome" $ncfscmd_mkdir $remote_dir
-    for i in $(ls $rev/bin/$TARGET/*-factory.bin); do
+    for i in $(ls $rev/bin/$target/*-factory.bin 2>/dev/null); do
         filename=$(basename $i)
-		if [ "$TARGET" = "ramips" ]; then
-			filename=${filename/openwrt-*?ramips-mt7620-/}
-		fi
-        filename=${filename/openwrt-$TARGET-generic/$BRAND}
+        filename=${filename/openwrt-*?$target-$subtarget/$brand}
         filename=${filename/-squashfs-factory/}
         NCFS_HOME="$ncfshome" $ncfscmd_put $i "$remote_dir/$filename"
     done
-    for i in $(ls $rev/bin/$TARGET/*-sysupgrade.bin); do
+    for i in $(ls $rev/bin/$target/*-sysupgrade.bin 2>/dev/null); do
         filename=$(basename $i)
-		if [ "$TARGET" = "ramips" ]; then
-			filename=${filename/openwrt-*?ramips-mt7620-/}
-		fi
-        filename=${filename/openwrt-$TARGET-generic/$BRAND}
+        filename=${filename/openwrt-*?$target-$subtarget/$brand}
         filename=${filename/-squashfs-sysupgrade/-upgrade}
         NCFS_HOME="$ncfshome" $ncfscmd_put $i "$remote_dir/$filename"
     done
@@ -122,5 +123,5 @@ cd $CURPATH
 ls $REV/bin/$TARGET/*.bin
 
 # upload firmware
-upload_firmware $REV
+upload_firmware $REV $FILES $TARGET $SUBTARGET $BRAND
 
