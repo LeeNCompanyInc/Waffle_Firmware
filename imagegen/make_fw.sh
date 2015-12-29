@@ -12,6 +12,7 @@ BRAND=${BRAND:-"waffle"}
 TARGET=${TARGET:-"ar71xx"}
 SUBTARGET=${SUBTARGET:-"generic"}
 FILES=${FILES:-"files"}
+NO_FILES=${NO_FILES:-""}
 PROFILE=${PROFILE:-""}
 PROFILE_8M=${PROFILE_8M:-""}
 PROFILE_16M=${PROFILE_16M:-""}
@@ -51,43 +52,55 @@ fi
 make_firmware() { # <rev>
     local rev="$1"
     # copy additional root files
-    if [ -d $rev/files ]; then
-        rm -rfv $rev/files
-    fi
-    mkdir -pv $rev/files
+	[ -z "$NO_FILES" ] && {
+	    if [ -d "$rev/files" ]; then
+	        rm -rfv "$rev/files"
+	    fi
+	    mkdir -pv "$rev/files"
 
-    for i in $(ls $CURPATH/$FILES); do
-        cp -fpRv $CURPATH/$FILES/$i $rev/files/ ;
-    done
+	    for i in $(ls $CURPATH/$FILES); do
+	        cp -fpRv "$CURPATH/$FILES/$i" "$rev/files/" ;
+	    done
+	}
+	[ ! -z "$NO_FILES" ] && {
+		rm -rfv "$rev/files"
+	}
 
     cd $rev && {
         make clean
         for i in $PROFILE; do
-            make image PROFILE=$i PACKAGES="$PACKAGES" FILES=files
+			[ -z "$NO_FILES" ] && make image PROFILE=$i PACKAGES="$PACKAGES" FILES="files"
+			[ ! -z "$NO_FILES" ] && make image PROFILE=$i PACKAGES="$PACKAGES" FILES=
         done
         for i in $PROFILE_8M; do
-            make image PROFILE=$i PACKAGES="$PACKAGES_8M" FILES=files
+			[ -z "$NO_FILES" ] && make image PROFILE=$i PACKAGES="$PACKAGES_8M" FILES="files"
+            [ ! -z "$NO_FILES" ] && make image PROFILE=$i PACKAGES="$PACKAGES_8M" FILES=
         done
         for i in $PROFILE_16M; do
-            make image PROFILE=$i PACKAGES="$PACKAGES_16M" FILES=files
+			[ -z "$NO_FILES" ] && make image PROFILE=$i PACKAGES="$PACKAGES_16M" FILES="files"
+            [ ! -z "$NO_FILES" ] && make image PROFILE=$i PACKAGES="$PACKAGES_16M" FILES=
         done
     }
 }
 
 upload_firmware() { # <rev> <files> <target> [subtarget=generic] [brand=Waffle]
-    local rev="$1"
-	local files="$2"
-	local target="$3"
-	local subtarget="$4"
+	local rev files target subtarget brand version branch dirname fw_dir remote_dir
+    rev="$1"; shift;
+	files="$1"; shift;
+	target="$1"; shift;
+	[ ! -z "$1" ] && { subtarget="$1"; shift; }
 	subtarget=${subtarget:-"generic"}
-	local brand="$5"
+	[ ! -z "$1" ] && { brand="$1"; shift; }
 	brand=${brand:-"Waffle"}
-    local version="$(cd $files && git describe --always --tags --dirty=m)"
-    local branch="$(cd $files && git branch)"
-    branch="${branch##* }"
-    local dirname="${files##files_}"
-    local fw_dir="$rev-$dirname-$version"
-    local remote_dir="$TARGET_PATH/$fw_dir"
+	fw_dir="$rev"
+	[ -z "$NO_FILES" ] && {
+	    version="$(cd $files && git describe --always --tags --dirty=m)"
+	    branch="$(cd $files && git branch)"
+	    branch="${branch##* }"
+	    dirname="${files##files_}"
+	    fw_dir="${fw_dir}-${dirname}-${version}"
+	}
+    remote_dir="$TARGET_PATH/$fw_dir"
 
     NCFS_HOME="$ncfshome" $ncfscmd_mkdir $remote_dir
     for i in $(ls $rev/bin/$target/*-factory.bin 2>/dev/null); do
@@ -104,7 +117,7 @@ upload_firmware() { # <rev> <files> <target> [subtarget=generic] [brand=Waffle]
     done
 }
 
-cd $FILES && {
+[ -z "$NO_FILES" ] && cd $FILES && {
     [ -e .git ] && {
         git stash
         git checkout -f
