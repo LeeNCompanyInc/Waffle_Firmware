@@ -111,13 +111,13 @@ upload_firmware() { # <rev> <files> <target> [subtarget=generic] [brand=Waffle]
     NCFS_HOME="$ncfshome" $ncfscmd_mkdir $remote_dir
     for i in $(ls $rev/bin/$target/*-factory.bin 2>/dev/null); do
         filename=$(basename $i)
-        filename=${filename/openwrt-*?$target-$subtarget/$brand}
+        filename=${filename/openwrt-*$target-$subtarget/$brand}
         filename=${filename/-squashfs-factory/}
         NCFS_HOME="$ncfshome" $ncfscmd_put $i "$remote_dir/$filename"
     done
     for i in $(ls $rev/bin/$target/*-sysupgrade.bin 2>/dev/null); do
         filename=$(basename $i)
-        filename=${filename/openwrt-*?$target-$subtarget/$brand}
+        filename=${filename/openwrt-*$target-$subtarget/$brand}
         filename=${filename/-squashfs-sysupgrade/-upgrade}
         NCFS_HOME="$ncfshome" $ncfscmd_put $i "$remote_dir/$filename"
     done
