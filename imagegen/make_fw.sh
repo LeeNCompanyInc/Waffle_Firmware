@@ -69,11 +69,17 @@ make_firmware() { # <rev>
     cd $rev && {
         make clean
         for i in $PROFILE; do
-			[ -z "$NO_FILES" ] && make image PROFILE=$i PACKAGES="$PACKAGES" FILES="files"
-			[ ! -z "$NO_FILES" ] && make image PROFILE=$i PACKAGES="$PACKAGES" FILES=
+			[ -z "$NO_FILES" ] && {
+				make image PROFILE=$i PACKAGES="$PACKAGES_4M" FILES="files"
+			}
+			[ ! -z "$NO_FILES" ] && {
+				make image PROFILE=$i PACKAGES="$PACKAGES_4M" FILES=
+			}
         done
         for i in $PROFILE_8M; do
-			[ -z "$NO_FILES" ] && make image PROFILE=$i PACKAGES="$PACKAGES_8M" FILES="files"
+			[ -z "$NO_FILES" ] && {
+				make image PROFILE=$i PACKAGES="$PACKAGES_8M" FILES="files"
+			}
             [ ! -z "$NO_FILES" ] && make image PROFILE=$i PACKAGES="$PACKAGES_8M" FILES=
         done
         for i in $PROFILE_16M; do
