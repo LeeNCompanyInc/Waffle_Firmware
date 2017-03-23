@@ -10,3 +10,6 @@ url=https://github.com/LeeNCompanyInc/openwrt
 [submodule "chaos_calmer"]
 	path = chaos_calmer
 url=https://github.com/LeeNCompanyInc/openwrt
+[submodule "lede-17.01"]
+	path = lede-17.01
+	url = https://github.com/lede-project/source
